@@ -1,9 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
+import * as DoctorService from "../services/doctors.service"
+import { Doctor } from '../models/doctor.interface';
 
-const serverHealthCheck = (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).json({
-        message: 'pong'
-    });
+const addDoctor = async (req: Request, res: Response) => {
+    try {
+        const doctor: Doctor = req.body;
+        const newDoctor = await DoctorService.create(doctor);
+        res.status(201).json(newDoctor);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+    
 };
 
-export default { serverHealthCheck };
+export default { addDoctor };

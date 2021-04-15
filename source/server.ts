@@ -5,7 +5,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import logging from './config/logging';
 import config from './config/config';
-import sampleRoutes from './routes/doctors';
+import doctorRoutes from './routes/doctors';
+import { errorHandler } from './middleware/error';
+import { notFoundHandler } from './middleware/not-found';
 
 const NAMESPACE = 'Server';
 const router = express();
@@ -14,16 +16,10 @@ router.use(helmet());
 router.use(cors());
 router.use(express.json());
 /** Routes go here */
-router.use('/api/doctors', sampleRoutes);
+router.use('/api', doctorRoutes);
 
-/** Error handling */
-router.use((req, res, next) => {
-    const error = new Error('Not found');
-
-    res.status(404).json({
-        message: error.message
-    });
-});
+router.use(errorHandler);
+router.use(notFoundHandler);
 
 const httpServer = http.createServer(router);
 
