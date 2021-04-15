@@ -9,5 +9,8 @@ export const find = async (id: number): Promise<Doctor> => doctors.find(d=>d.id=
 
 export const create = async (newDoctor: Doctor): Promise<Doctor> => {
     doctors.push({...newDoctor});
+    if(newDoctor.active===true){
+        console.log(...newDoctor.name, ...newDoctor.facility)
+    }
     return newDoctor;
 };
