@@ -1,0 +1,11 @@
+{
+  "name": "nodejsapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "source/server.ts",
+  "scripts": {
+    "build": "rm -rf build/ && prettier --write source/ && tsc"
+  },
+  "author": "Mihai Barbu",
+  "license": "MIT"
+}
