@@ -8,6 +8,7 @@ import config from './config/config';
 import doctorRoutes from './routes/doctors';
 import { errorHandler } from './middleware/error';
 import { notFoundHandler } from './middleware/not-found';
+import fileUpload from 'express-fileupload';
 
 const NAMESPACE = 'Server';
 const router = express();
@@ -15,6 +16,7 @@ const router = express();
 router.use(helmet());
 router.use(cors());
 router.use(express.json());
+router.use(fileUpload());
 /** Routes go here */
 router.use('/api', doctorRoutes);
 
