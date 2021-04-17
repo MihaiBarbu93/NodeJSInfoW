@@ -5,14 +5,16 @@ import { Name } from '../models/name.interface';
 import { Facility } from '../models/facility.interface';
 import { body, validationResult, CustomValidator } from 'express-validator';
 import { UploadedFile } from 'express-fileupload';
-//const csv = require('csv-parser');
+import path from 'path';
 import csv from 'csv-parser';
 import * as fs from 'fs';
+import { DoctorFromCsv } from '../models/doctorFromCsv.interface';
+import { DoctorWithHosp } from '../models/doctorWithHosp.interface';
 
 
 
 const addDoctor = async (req: Request, res: Response) => {
-    let csvResults: any[] = [];
+    let csvResults: DoctorFromCsv[] = [];
     try {
         if(req.headers['content-type']==='application.json'){
             const dr = req.body;
@@ -52,7 +54,19 @@ const addDoctor = async (req: Request, res: Response) => {
             if (req.files.file.mimetype !== 'text/csv') {
                 return res.status(400).send('Please add a csv file');
             }
-            fs.createReadStream(req.files.file.name)
+            const file = req.files.file;
+            const fileName = file.name;
+
+            file.mv(`./source/assets/csv-files/${fileName}`, async err =>{
+                if(err){
+                    console.error(err);
+                    return res.status(500).send('Problem with file upload');
+                }
+                
+            });
+            
+            debugger
+            fs.createReadStream(`./source/assets/csv-files/${fileName}`)
                 .pipe(
                     csv({
                         mapValues: ({ value }) => value.trim()
@@ -60,7 +74,34 @@ const addDoctor = async (req: Request, res: Response) => {
                 )
                 .on('data', (data: any) => csvResults.push(data))
                 .on('end', () => {
-                    console.log(csvResults);
+                    let doctorsToPrint: DoctorWithHosp[] = [];
+                    for (let doc of csvResults){
+                        let dctr: DoctorWithHosp = {
+                            Name: doc.FamilyName + ' ' + doc.GivenName,
+                            Names: [doc.NameId],
+                            Active: doc.Active == 'true'
+                        };
+                        if(doctorsToPrint.length === 0 && dctr.Active===true){
+                            doctorsToPrint.push(dctr);
+                        }else if (dctr.Active === true) {
+                            for (let dc of doctorsToPrint) {
+                                if (dc.Name === doc.FamilyName + ' ' + doc.GivenName) {
+                                    if (!dc.Names.includes(doc.NameId)) {
+                                        dc.Names.push(doc.NameId);
+                                    }
+                                } else {
+                                    doctorsToPrint.push(dctr);
+                                }
+                            }
+                        }
+                    }
+                   
+                   
+                    
+                    doctorsToPrint.forEach(dc => {
+                        console.log(`${dc.Name} : ${dc.Names}`);
+                    });
+                
                 });
             res.status(201).json('File added');
         }
