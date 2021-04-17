@@ -16,11 +16,12 @@ const notPratitioner: CustomValidator = async (resourceType) => {
         return Promise.reject('Only practitioners are allowed');
     }
 }
-router.post('/addDoctor', 
+router.post('/', 
     body('resourceType').notEmpty().custom(notPratitioner),
     body('id').notEmpty().custom(notDuplicate),
     body('active').notEmpty().isBoolean(),
     controller.addDoctor
 );
+router.put('/', controller.addCsv)
 
 export = router;

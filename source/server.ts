@@ -18,7 +18,7 @@ router.use(cors());
 router.use(express.json());
 router.use(fileUpload());
 /** Routes go here */
-router.use('/api', doctorRoutes);
+router.use('/', doctorRoutes);
 
 router.use(errorHandler);
 router.use(notFoundHandler);
