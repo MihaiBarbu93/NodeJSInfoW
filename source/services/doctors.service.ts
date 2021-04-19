@@ -13,19 +13,19 @@ export const create = async (newDoctor: Doctor): Promise<Doctor> => {
     return newDoctor;
 };
 
-export const checkCsvInputs = (doctors: DoctorFromCsv[])=>{
+export const checkCsvInputs = (doctors: any[])=>{
     let uniqueDoctors: Record<string, string> = {};
     for(let doc of doctors){
-        let id = doc.ID;
+        let id = doc[0];
         if(uniqueDoctors.id===undefined){
-            uniqueDoctors[id] = `${doc.FamilyName} ${doc.GivenName}`
+            uniqueDoctors[id] = `${doc[1]} ${doc[2]}`
         }
     }
     for(let doc of doctors){
-        if(uniqueDoctors[doc.ID] !== `${doc.FamilyName} ${doc.GivenName}`){
+        if(uniqueDoctors[doc[0]] !== `${doc[1]} ${doc[2]}`){
 
-            console.log('id: ', doc.ID, `${uniqueDoctors[doc.ID]}`);
-            console.log('id: ',doc.ID , `${doc.FamilyName} ${doc.GivenName}`);
+            console.log('id: ', doc[0], `${uniqueDoctors[doc[0]]}`);
+            console.log('id: ',doc[0] , `${doc[1]} ${doc[2]}`);
             return false;
         }
     }

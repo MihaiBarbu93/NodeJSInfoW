@@ -1,5 +1,5 @@
 export interface DoctorFromCsv {
-    ID: number;
+    ID: string;
     FamilyName: string;
     GivenName: string;
     FacilityId: number;
