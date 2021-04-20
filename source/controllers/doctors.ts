@@ -23,7 +23,7 @@ const addCsvOrJson = async (req: Request, res: Response) => {
         res.status(201).json('File added');
     }
     if (req.headers['content-type'] === 'application/json') {
-        const newDoctor = await DoctorService.create(req,res, token);
+        const newDoctor = await DoctorService.addJson(req,res, token);
         res.status(201).json(newDoctor);
     }
 };

@@ -10,7 +10,7 @@ let doctors: Doctor[] = [];
 
 export const find = async (id: number): Promise<Doctor> => doctors.find((d) => d.id === id)!;
 
-export const create = async (req: Request, res: Response, token: Object) => {
+export const addJson = async (req: Request, res: Response, token: Object) => {
     const dr = req.body;
     const names: Name[] = [];
     const facilities: Facility[] = [];
