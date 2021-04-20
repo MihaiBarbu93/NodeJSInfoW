@@ -1,6 +1,6 @@
-import express , { Request, Response } from 'express';
+import express  from 'express';
 import controller from '../controllers/doctors';
-import { body, validationResult, CustomValidator } from 'express-validator';
+import { body, CustomValidator } from 'express-validator';
 import * as DoctorService from '../services/doctors.service';
 
 const router = express.Router();
@@ -20,8 +20,7 @@ router.post('/',
     body('resourceType').notEmpty().custom(notPratitioner),
     body('id').notEmpty().custom(notDuplicate),
     body('active').notEmpty().isBoolean(),
-    controller.addDoctor
+    controller.addCsvOrJson
 );
-router.put('/', controller.addCsv)
 
 export = router;

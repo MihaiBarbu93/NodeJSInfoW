@@ -1,5 +1,4 @@
 import http from 'http';
-import bodyParser from 'body-parser';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -17,7 +16,7 @@ router.use(helmet());
 router.use(cors());
 router.use(express.json());
 router.use(fileUpload());
-/** Routes go here */
+
 router.use('/', doctorRoutes);
 
 router.use(errorHandler);
