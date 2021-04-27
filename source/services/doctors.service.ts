@@ -57,8 +57,7 @@ export const addCsv = async (req: Request, res: Response, token: Object) =>{
     }
     let csvResults: any[] = [];
     const file = req.files.file;
-    const fileName = file.name;
-    csvResults = req.files.file.data
+    csvResults = file.data
         .toString('utf8')
         .trim()
         .split('\r\n')
@@ -86,15 +85,15 @@ export const addCsv = async (req: Request, res: Response, token: Object) =>{
     });
 }
 
-export const checkCsvInputs = (doctors: any[])=>{
+export const checkCsvInputs = (csvData: any[])=>{
     let uniqueDoctors: Record<string, string> = {};
-    for(let doc of doctors){
+    for(let doc of csvData){
         let id = doc[0];
         if(uniqueDoctors.id===undefined){
             uniqueDoctors[id] = `${doc[1]} ${doc[2]}`
         }
     }
-    for(let doc of doctors){
+    for(let doc of csvData){
         if(uniqueDoctors[doc[0]] !== `${doc[1]} ${doc[2]}`){
 
             console.log('id: ', doc[0], `${uniqueDoctors[doc[0]]}`);
