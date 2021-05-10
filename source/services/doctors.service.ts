@@ -4,13 +4,13 @@ import { Name } from '../models/name.interface';
 import { Facility } from '../models/facility.interface';
 import { validationResult } from 'express-validator';
 import { DoctorWithHosp } from '../models/doctorWithHosp.interface';
-import { _ } from 'underscore';
+
 
 let doctors: Doctor[] = [];
 
 export const find = async (id: number): Promise<Doctor> => doctors.find((d) => d.id === id)!;
 
-export const addJson = async (req: Request, res: Response, token: Object) => {
+export const addJson = (req: Request, res: Response, token: Object) => {
     const dr = req.body;
     const names: Name[] = [];
     const facilities: Facility[] = [];
@@ -62,9 +62,9 @@ export const addCsv = async (req: Request, res: Response, token: Object) =>{
         .trim()
         .split('\r\n')
         .slice(1)
-        .map((r) => r.split(',').map((r) => r.trim()));
+        .map((row) => row.split(',').map((row) => row.trim()));
     if (!checkCsvInputs(csvResults)) {
-        return res.status(400).send('Csv has same id on different names');
+        return res.status(400).json('Csv has same id on different names');
     }
     let doctorsToPrint: DoctorWithHosp[] = [];
     for (let doc of csvResults) {
@@ -95,7 +95,6 @@ export const checkCsvInputs = (csvData: any[])=>{
     }
     for(let doc of csvData){
         if(uniqueDoctors[doc[0]] !== `${doc[1]} ${doc[2]}`){
-
             console.log('id: ', doc[0], `${uniqueDoctors[doc[0]]}`);
             console.log('id: ',doc[0] , `${doc[1]} ${doc[2]}`);
             return false;
